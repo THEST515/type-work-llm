@@ -21,7 +21,10 @@ class Config:
 
     @classmethod
     def from_yaml(cls, path: str) -> "Config":
-        import yaml
+        try:
+            import yaml
+        except ImportError:
+            raise ImportError("缺少 pyyaml 库，请运行: pip install pyyaml")
         with open(path, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
         return cls(

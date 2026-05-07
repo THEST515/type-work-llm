@@ -43,7 +43,9 @@ pip install -r requirements.txt
 
 ### 3. 配置 API Key
 
-编辑 `config.yaml`，填写 API Key：
+编辑 `config.yaml`，注意！：请将cofig.yaml.example中的example字段手动删除，只留config.yaml  
+
+填写 API Key：
 
 ```yaml
 model_provider: deepseek
