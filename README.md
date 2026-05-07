@@ -24,6 +24,17 @@
 
 其他兼容接口的模型（Anthropic Claude、OpenAI GPT）也可使用。
 
+### VSCode 插件（推荐）
+
+项目打开后会提示安装推荐插件，点击"安装"即可。如未提示，手动安装：
+
+| 插件 | 用途 | 安装方式 |
+|------|------|----------|
+| **Markdown Preview Mermaid Support** | 预览 `.mermaid` 图表文件 | `Ctrl+Shift+X` 搜索 `bierner.markdown-mermaid` |
+| **Python** (Microsoft) | Python 语法高亮和调试 | VSCode 打开 `.py` 文件会自动提示安装 |
+
+> `.mermaid` 文件打开后按 `Ctrl+K V` 即可在侧边栏看到渲染后的 UML 图。
+
 ---
 
 ## 快速开始
