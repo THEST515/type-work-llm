@@ -1,0 +1,15 @@
+model_provider: deepseek
+model_name: deepseek-chat
+api_key: "在此填写你的API Key"
+api_base: https://api.deepseek.com
+temperature: 0.3
+max_tokens: 8192
+max_retries: 3
+output_format: mermaid
+output_dir: design
+diagrams:
+  - class
+  - activity
+  - state
+verbose: false
+interactive: false

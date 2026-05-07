@@ -1,0 +1,99 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "智能体: 分析+设计（当前文件）",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "agent.py",
+        "--task", "design",
+        "--input", "${file}",
+        "--output", "design/",
+        "--config", "config.yaml"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true,
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "智能体: 分析+设计（example-prd）",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "agent.py",
+        "--task", "design",
+        "--input", "example-prd.md",
+        "--output", "design/",
+        "--config", "config.yaml"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true,
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "智能体: 只生成类图+活动图",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "agent.py",
+        "--task", "design",
+        "--input", "${file}",
+        "--output", "design/",
+        "--config", "config.yaml",
+        "--diagrams", "class,activity"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true,
+        "clear": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "智能体: 交互模式",
+      "type": "shell",
+      "command": "python",
+      "args": [
+        "agent.py",
+        "--task", "design",
+        "--input", "${file}",
+        "--output", "design/",
+        "--config", "config.yaml",
+        "--interactive"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": true,
+        "clear": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}

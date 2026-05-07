@@ -1,0 +1,23 @@
+# API 密钥
+config.yaml
+
+# 输出产物
+design/
+design-exam/
+design-parking/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# 系统文件
+.DS_Store
+Thumbs.db
