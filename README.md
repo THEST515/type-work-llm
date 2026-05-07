@@ -32,7 +32,7 @@
 
 ```bash
 git clone https://github.com/THEST515/type-work-llm.git
-cd type-wowk-llm
+cd type-work-llm
 ```
 
 ### 2. 安装依赖
