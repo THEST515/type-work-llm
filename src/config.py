@@ -7,7 +7,7 @@ DEFAULT_DIAGRAMS = ["class", "activity", "state"]
 @dataclass
 class Config:
     model_provider: str = "deepseek"
-    model_name: str = "deepseek-v4-pro"
+    model_name: str = "deepseek-v4-flash"
     api_base: str = "https://api.deepseek.com"
     api_key: str = ""
     temperature: float = 0.3
@@ -29,7 +29,7 @@ class Config:
             data = yaml.safe_load(f) or {}
         return cls(
             model_provider=data.get("model_provider", "deepseek"),
-            model_name=data.get("model_name", "deepseek-chat"),
+            model_name=data.get("model_name", "deepseek-v4-flash"),
             api_base=data.get("api_base", "https://api.deepseek.com"),
             api_key=data.get("api_key", ""),
             temperature=float(data.get("temperature", 0.3)),
@@ -46,7 +46,7 @@ class Config:
     def from_env(cls) -> "Config":
         return cls(
             model_provider=os.getenv("AGENT_MODEL_PROVIDER", "deepseek"),
-            model_name=os.getenv("AGENT_MODEL_NAME", "deepseek-chat"),
+            model_name=os.getenv("AGENT_MODEL_NAME", "deepseek-v4-flash"),
             api_base=os.getenv("AGENT_API_BASE", "https://api.deepseek.com"),
             api_key=os.getenv("AGENT_API_KEY", ""),
             temperature=float(os.getenv("AGENT_TEMPERATURE", "0.3")),

@@ -54,7 +54,7 @@ class Orchestrator:
                       (behavior_count if "activity" in diagrams else 0) + \
                       (state_count if "state" in diagrams else 0)
 
-        max_workers = min(10, max(1, total_tasks))
+        max_workers = min(3, max(1, total_tasks))
         activity_results = {}
         state_results = {}
 

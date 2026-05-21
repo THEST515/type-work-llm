@@ -22,7 +22,7 @@
 | DeepSeek API Key | 注册地址 https://platform.deepseek.com |
 | 操作系统 | Windows / macOS / Linux |
 
-其他兼容接口的模型（Anthropic Claude、OpenAI GPT）也可使用。
+其他兼容 OpenAI 接口的模型（Anthropic Claude、OpenAI GPT）也可使用。
 
 ### VSCode 插件（推荐）
 
@@ -42,8 +42,8 @@
 ### 1. 克隆仓库
 
 ```bash
-git clone <仓库地址>
-cd circle
+git clone https://github.com/THEST515/type-work-llm.git
+cd type-work-llm
 ```
 
 ### 2. 安装依赖
@@ -54,13 +54,11 @@ pip install -r requirements.txt
 
 ### 3. 配置 API Key
 
-编辑 `config.yaml`，注意！：请将cofig.yaml.example中的example字段手动删除，只留config.yaml  
-
-填写 API Key：
+> 将 `config.yaml.example` 重命名为 `config.yaml`，填写 API Key。
 
 ```yaml
 model_provider: deepseek
-model_name: deepseek-chat
+model_name: deepseek-v4-flash
 api_key: "你的API Key"
 api_base: https://api.deepseek.com
 ```
@@ -120,7 +118,7 @@ python agent.py --task design --input requirements.md --provider openai --model 
 | `--output` | 输出目录 | `design/` |
 | `--config` | YAML 配置文件路径 | 无 |
 | `--provider` | 模型提供商：`deepseek` / `anthropic` / `openai` | `deepseek` |
-| `--model` | 模型名称 | `deepseek-chat` |
+| `--model` | 模型名称 | `deepseek-v4-flash` |
 | `--api-key` | API Key（也可用环境变量） | 自动读取 |
 | `--api-base` | API 地址 | `https://api.deepseek.com` |
 | `--diagrams` | 图表类型，逗号分隔：`class,activity,state` | 全部三种 |
@@ -165,23 +163,25 @@ agent> quit       # 退出
 ## 项目结构
 
 ```
-circle/
+.
 ├── agent.py                    # CLI 入口，argparse 命令行解析
-├── config.yaml                 # YAML 配置文件
+├── config.yaml.example         # YAML 配置文件模板
 ├── example-prd.md              # 示例需求文档（在线图书管理系统）
+├── prd-在线考试系统.md          # 应用案例1
+├── prd-智能停车管理系统.md       # 应用案例2
 ├── requirements.txt            # Python 依赖
 ├── .vscode/
 │   ├── tasks.json              # VSCode 任务配置（Ctrl+Shift+B）
-│   └── extensions.json         # 推荐插件（Mermaid Preview）
-├── analysis-and-design.md      # 系统分析与设计文档（含类图/活动图/状态机图设计）
+│   └── extensions.json         # 推荐插件
+├── analysis-and-design.md      # 系统分析与设计文档
 └── src/
-    ├── models.py               # 数据模型（Entity, Behavior, AnalysisResult 等）
-    ├── config.py               # 配置管理（YAML / 环境变量 / CLI 参数）
-    ├── llm_adapter.py          # LLM 适配器（支持 DeepSeek / Anthropic / OpenAI）
-    ├── analyzer.py             # 需求分析器（骨架提取 + 并发表格填充）
+    ├── models.py               # 数据模型
+    ├── config.py               # 配置管理（YAML / 环境变量 / CLI）
+    ├── llm_adapter.py          # LLM 适配器（DeepSeek / Anthropic / OpenAI）
+    ├── analyzer.py             # 需求分析器（单次 LLM 调用提取实体+行为+约束）
     ├── diagram_generators.py   # 图表生成器（类图 / 活动图 / 状态机图）
     ├── orchestrator.py         # 任务编排器（串行分析 + 并发图表生成）
-    └── formatter.py            # 输出格式化（Mermaid 文件 + Markdown 报告）
+    └── formatter.py            # 输出格式化（Mermaid + Markdown 报告）
 ```
 
 ---
@@ -198,14 +198,13 @@ circle/
               ▼              ▼              ▼
        ┌──────────┐  ┌──────────────┐  ┌──────────────────┐
        │ Analyzer │  │DiagramGens   │  │   LLMAdapter     │
-       │(两阶段)  │  │(类/活动/状态)│  │(DeepSeek/Claude) │
+       │(单次调用)│  │(类/活动/状态)│  │(DeepSeek/Claude) │
        └──────────┘  └──────────────┘  └──────────────────┘
 ```
 
 **核心设计**：
-- **分析阶段**：骨架提取（1次快速调用）→ 并发细节填充（N实体+M行为同时跑），利用 ThreadPoolExecutor
-- **图表阶段**：类图 + N张活动图 + M张状态机图并发生成
-- **缓存优化**：所有同类型 LLM 调用共享相同 system prompt，可变信息放 user message 尾部，最大化 DeepSeek 缓存命中率
+- **分析阶段**：单次 LLM 调用完成实体、行为、约束提取，避免多次网络往返
+- **图表阶段**：类图 + N张活动图 + M张状态机图并发生成（ThreadPoolExecutor）
 - **错误恢复**：JSON 解析失败自动修复（去尾部逗号、补全括号、LLM 自行修复三级策略）
 
 ---
@@ -239,7 +238,7 @@ design/
 
 ```bash
 python agent.py --task design --input requirements.md \
-    --provider deepseek --model deepseek-chat --api-key sk-xxx
+    --provider deepseek --model deepseek-v4-flash --api-key sk-xxx
 ```
 
 ### 方式二：YAML 配置文件
@@ -247,7 +246,7 @@ python agent.py --task design --input requirements.md \
 ```yaml
 # config.yaml
 model_provider: deepseek
-model_name: deepseek-chat
+model_name: deepseek-v4-flash
 api_key: "你的Key"
 api_base: https://api.deepseek.com
 temperature: 0.3
