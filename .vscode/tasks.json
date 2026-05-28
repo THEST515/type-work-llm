@@ -12,64 +12,34 @@
         "--output", "design/",
         "--config", "config.yaml"
       ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "focus": true,
-        "clear": true
-      },
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": { "kind": "build", "isDefault": true },
+      "presentation": { "reveal": "always", "panel": "new", "focus": true, "clear": true },
       "problemMatcher": []
     },
     {
-      "label": "智能体: 分析+设计（example-prd）",
+      "label": "智能体: 快速模式（跳过审核）",
       "type": "shell",
       "command": "python",
       "args": [
-        "agent.py",
-        "--task", "design",
-        "--input", "example-prd.md",
-        "--output", "design/",
-        "--config", "config.yaml"
+        "agent.py", "--task", "design", "--input", "${file}",
+        "--output", "design/", "--config", "config.yaml", "--skip-review"
       ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "focus": true,
-        "clear": true
-      },
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "reveal": "always", "panel": "new", "focus": true, "clear": true },
       "problemMatcher": []
     },
     {
-      "label": "智能体: 只生成类图+活动图",
+      "label": "智能体: 从已有JSON出图",
       "type": "shell",
       "command": "python",
       "args": [
-        "agent.py",
-        "--task", "design",
-        "--input", "${file}",
-        "--output", "design/",
-        "--config", "config.yaml",
-        "--diagrams", "class,activity"
+        "agent.py", "--task", "design", "--input", "${file}",
+        "--output", "design/", "--config", "config.yaml",
+        "--edit-file", "design/raw-analysis.json", "--skip-review"
       ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "presentation": {
-        "reveal": "always",
-        "panel": "new",
-        "focus": true,
-        "clear": true
-      },
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "reveal": "always", "panel": "new", "focus": true, "clear": true },
       "problemMatcher": []
     },
     {
@@ -77,22 +47,11 @@
       "type": "shell",
       "command": "python",
       "args": [
-        "agent.py",
-        "--task", "design",
-        "--input", "${file}",
-        "--output", "design/",
-        "--config", "config.yaml",
-        "--interactive"
+        "agent.py", "--task", "design", "--input", "${file}",
+        "--output", "design/", "--config", "config.yaml", "--interactive"
       ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "focus": true,
-        "clear": true
-      },
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "reveal": "always", "panel": "dedicated", "focus": true, "clear": true },
       "problemMatcher": []
     }
   ]

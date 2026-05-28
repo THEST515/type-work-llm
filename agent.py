@@ -81,6 +81,14 @@ def build_parser() -> argparse.ArgumentParser:
         "--interactive", action="store_true",
         help="半交互模式：生成后可对图表提出修改意见",
     )
+    parser.add_argument(
+        "--skip-review", action="store_true",
+        help="跳过审核步骤，AI分析完直接生成图表",
+    )
+    parser.add_argument(
+        "--edit-file", default=None, type=str,
+        help="从已有的 JSON 文件加载分析结果，跳过 AI 提取",
+    )
     return parser
 
 
@@ -88,7 +96,7 @@ def main():
     parser = build_parser()
     args = parser.parse_args()
 
-    if not Path(args.input).exists():
+    if not args.edit_file and not Path(args.input).exists():
         print(f"错误: 输入文件不存在: {args.input}", file=sys.stderr)
         sys.exit(1)
 
@@ -121,7 +129,11 @@ def main():
         print()
 
     orchestrator = Orchestrator(config)
-    output = orchestrator.run(args.input)
+    output = orchestrator.run(
+        args.input,
+        skip_review=args.skip_review,
+        edit_file=args.edit_file or "",
+    )
 
     if config.interactive:
         interactive_loop(orchestrator, output)

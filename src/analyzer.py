@@ -76,12 +76,14 @@ class RequirementAnalyzer:
                 except Exception:
                     pass
 
-        return AnalysisResult(
+        result = AnalysisResult(
             summary=data.get("summary", ""),
             entities=entities,
             behaviors=behaviors,
             constraints=constraints,
         )
+        result.to_file("design/raw-analysis.json")
+        return result
 
     def _parse_json(self, text: str) -> dict | None:
         json_str = self._extract_json(text)

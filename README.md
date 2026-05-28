@@ -79,6 +79,50 @@ export DEEPSEEK_API_KEY=你的API Key
 python agent.py --task design --input example-prd.md --output design/
 ```
 
+## 透明审核流程
+
+AI 分析完成后会**暂停并向你展示**提取到的实体、行为、约束，你可以审核和修改后再出图，而不是黑盒一步到位。
+
+```
+AI提取 → 暂停展示 → 人工审核/修改 → 确认 → 生成图表
+```
+
+### 审核操作
+
+分析完成后终端会显示：
+
+```
+实体 (7个):
+  1. User (4属性, 3方法) [association→Book]
+  ...
+行为 (5个):
+  1. 用户注册 (3步) - 用户填写信息后注册账户
+  ...
+
+[Enter]确认  [e]编辑  [r]重新加载文件  [q]退出
+```
+
+| 按键 | 操作 |
+|------|------|
+| Enter | 确认结果，生成图表 |
+| `e` | 进入编辑模式（增删改实体/行为）|
+| `r` | 从编辑好的 JSON 文件重新加载 |
+| `q` | 退出，分析结果已保存，后续可复用 |
+
+### 跳过审核（快速模式）
+
+```bash
+python agent.py --task design --input example-prd.md --skip-review
+```
+
+### 从已有分析文件生成图表（不调 LLM，秒出图）
+
+先跑一次分析→编辑 `design/raw-analysis.json`→然后：
+
+```bash
+python agent.py --task design --input example-prd.md --edit-file design/raw-analysis.json --skip-review
+```
+
 ---
 
 ## 使用方法
@@ -125,6 +169,8 @@ python agent.py --task design --input requirements.md --provider openai --model 
 | `--temperature` | 模型温度 (0.0-1.0) | `0.3` |
 | `--verbose` | 显示详细执行日志 | 关闭 |
 | `--interactive` | 半交互模式 | 关闭 |
+| `--skip-review` | 跳过审核，直接出图 | 关闭 |
+| `--edit-file <path>` | 从已有 JSON 加载分析结果 | 无 |
 
 ### 交互模式命令
 
@@ -153,10 +199,10 @@ agent> quit       # 退出
 | 选择任务（4个预设） | `Ctrl+Shift+P` → `Tasks: Run Task` |
 
 预设任务：
-- 智能体: 分析+设计（当前文件）
-- 智能体: 分析+设计（example-prd）
-- 智能体: 只生成类图+活动图
-- 智能体: 交互模式
+- 智能体: 分析+设计（当前文件）——含审核步骤
+- 智能体: 快速模式（跳过审核）——直接出图
+- 智能体: 从已有JSON出图——修改 raw-analysis.json 后复用，秒出
+- 智能体: 交互模式——生成后可手动重生成图表
 
 ---
 

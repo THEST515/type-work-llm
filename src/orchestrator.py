@@ -5,7 +5,8 @@ from src.llm_adapter import LLMAdapter
 from src.analyzer import RequirementAnalyzer
 from src.diagram_generators import ClassDiagramGenerator, ActivityDiagramGenerator, StateMachineGenerator
 from src.formatter import OutputFormatter
-from src.models import DesignOutput, MermaidDiagram, Behavior
+from src.reviewer import review
+from src.models import DesignOutput, MermaidDiagram, Behavior, AnalysisResult
 
 
 class Orchestrator:
@@ -19,15 +20,23 @@ class Orchestrator:
         self.state_gen = StateMachineGenerator(self.llm)
         self.formatter = OutputFormatter(config)
 
-    def run(self, input_doc: str) -> DesignOutput:
+    def run(self, input_doc: str, skip_review: bool = False,
+            edit_file: str = "") -> DesignOutput:
         print(f"[1/3] 加载需求文档: {input_doc}")
-        document = self._load_document(input_doc)
 
-        print(f"[2/3] 执行需求分析... (文档长度: {len(document)} 字符)")
-        analysis = self.analyzer.analyze(document)
+        if edit_file:
+            print(f"  从文件加载分析结果: {edit_file}")
+            analysis = AnalysisResult.from_file(edit_file)
+        else:
+            document = self._load_document(input_doc)
+            print(f"[2/3] 执行需求分析... (文档长度: {len(document)} 字符)")
+            analysis = self.analyzer.analyze(document)
+
         print(f"  => 提取到 {len(analysis.entities)} 个实体, "
               f"{len(analysis.behaviors)} 个行为, "
               f"{len(analysis.constraints)} 个约束")
+
+        analysis = review(analysis, skip=skip_review)
 
         output = DesignOutput(
             analysis=analysis,
