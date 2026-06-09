@@ -205,11 +205,21 @@ class AnalysisResult:
     def preview_text(self) -> str:
         lines = [f"实体 ({len(self.entities)}个):"]
         for i, e in enumerate(self.entities):
+            attrs = ", ".join(f"{a.name}:{a.type}" for a in e.attributes) or "无"
+            methods = ", ".join(f"{m.name}()" for m in e.methods) or "无"
             rels = ", ".join(f"{r.type}→{r.target}" for r in e.relationships) or "无"
-            lines.append(f"  {i+1}. {e.name} ({len(e.attributes)}属性, {len(e.methods)}方法) [{rels}]")
+            lines.append(f"  {i+1}. {e.name}")
+            lines.append(f"     属性: {attrs}")
+            lines.append(f"     方法: {methods}")
+            lines.append(f"     关系: {rels}")
         lines.append(f"\n行为 ({len(self.behaviors)}个):")
         for i, b in enumerate(self.behaviors):
-            lines.append(f"  {i+1}. {b.name} ({len(b.steps)}步) - {b.description}")
+            steps_preview = " → ".join(s.action for s in b.steps[:4])
+            if len(b.steps) > 4:
+                steps_preview += " → ..."
+            lines.append(f"  {i+1}. {b.name} ({len(b.steps)}步)")
+            lines.append(f"     描述: {b.description}")
+            lines.append(f"     步骤: {steps_preview}")
         lines.append(f"\n约束 ({len(self.constraints)}个):")
         for i, c in enumerate(self.constraints):
             lines.append(f"  {i+1}. [{c.type}] {c.description}")
